@@ -1,0 +1,4 @@
+env
+logs/*
+results/*
+modules/__pycache__/*
