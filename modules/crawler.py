@@ -5,6 +5,51 @@ from modules.scrapping_thread import ScrapingThread
 import pandas as pd
 
 class WebCrawler(QWidget):
+    """
+    A web crawler GUI application built using PyQt5.
+    Attributes:
+        visited_links (set): A set to store visited links.
+        no_workers (int): Number of worker threads to use for crawling.
+        unvisited_links (set): A set to store unvisited links.
+        title (str): Title of the crawler window.
+        action_started (bool): Flag to indicate if the crawling action has started.
+        save_execution (pd.DataFrame): DataFrame to save execution logs.
+        pattern (list): List of patterns to match during crawling.
+        HEADERS (dict): HTTP headers to use for requests.
+        initial_sitemap_url (str): Initial sitemap URL to start crawling from.
+        visited_links_label (QLabel): Label to display the number of visited links.
+        unvisited_links_label (QLabel): Label to display the number of unvisited links.
+        unique_link (QLabel): Label to display the number of unique links.
+        thread_status (list): List of labels to display the status of each thread.
+        status_label (QLabel): Label to display the current status of the crawler.
+        start_button (QPushButton): Button to start the crawling process.
+        save_button (QPushButton): Button to save the results.
+        save_complete_button (QPushButton): Button to export execution logs to a file.
+        scraping_thread (ScrapingThread): Thread to handle the scraping process.
+    Methods:
+        __init__(no_workers, sitemap_url, title='Untitled Crawler', pattern=[]):
+            Initializes the WebCrawler instance with the given parameters.
+        init_ui():
+            Initializes the UI components.
+        save_exec_result():
+            Saves the execution logs to a CSV file.
+        save_results():
+            Saves the crawling results to a text file.
+        start_crawling():
+            Starts the crawling process.
+        update_save_execution(save_execution):
+            Updates the save execution DataFrame with the latest crawling information.
+        update_status(status):
+            Updates the status label in the UI.
+        update_progress(visited, unvisited):
+            Updates the progress (visited/unvisited links) in the UI.
+        update_local_results(visited_links, unvisited_links):
+            Updates the local results with the latest crawling information.
+        update_display_info():
+            Updates the UI with the latest crawling information.
+        update_thread_status(thread_index, status):
+            Updates the individual thread status on the UI.
+    """
     def __init__(self, no_workers, sitemap_url, title = 'Untitled Crawler', pattern = []):
         super().__init__()
 

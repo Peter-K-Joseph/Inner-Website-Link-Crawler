@@ -10,6 +10,45 @@ import threading
 import pandas as pd
 
 class ScrapingThread(QThread):
+    """
+    A QThread subclass to handle web scraping in a separate thread.
+    Signals:
+        update_status (str): Signal to update status messages.
+        update_progress (int, int): Signal to update progress (visited, unvisited).
+        update_thread_status (int, str): Signal to update individual thread status.
+        update_results (set, set): Signal to update results.
+        update_save_execution (pd.DataFrame): Signal to update save execution.
+    Args:
+        initial_sitemap_url (str): The initial sitemap URL to start scraping from.
+        thread_status_labels (list): List of thread status labels.
+        no_workers (int): Number of worker threads to use.
+        pattern (list, optional): List of regex patterns to filter URLs. Defaults to [].
+    Methods:
+        run():
+            Override the run method to perform the scraping.
+        save_exec_result():
+            Save the execution results to a CSV file.
+        save_results():
+            Save the results to a text file.
+        reset_counts():
+            Reset the counts and update thread status labels.
+        process_sitemaps(initial_sitemap_url):
+            Process the initial sitemap sequentially.
+        parse_xml(xml_content):
+            Parse sitemap XML content to extract URLs.
+        parse_from_links():
+            Crawl links in the sitemap using multiple threads.
+        parse_links_worker(url, thread_id):
+            Worker function to parse links.
+        is_a_valid_http_link(url):
+            Check if a URL is a valid HTTP link.
+        fetch_links(url):
+            Fetch and parse links from the given URL.
+        is_url_content(url):
+            Check if a URL points to valid content.
+        clean_url(url):
+            Remove hash parameters from a URL.
+    """
     update_status = pyqtSignal(str)  # Signal to update status
     update_progress = pyqtSignal(int, int)  # Signal to update progress (visited, unvisited)
     update_thread_status = pyqtSignal(int, str)  # Signal to update individual thread status
