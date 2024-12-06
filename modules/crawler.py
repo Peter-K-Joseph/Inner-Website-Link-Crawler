@@ -84,7 +84,8 @@ class WebCrawler(QWidget):
         """Initialize the UI components."""
         self.setWindowTitle(self.title)
         self.setGeometry(100, 100, 400, 400)
-        self.setFixedSize(800, 400)
+        height = self.no_workers * 20 + 300
+        self.setFixedSize(800, height)
 
         # Create labels
         self.visited_links_label = QLabel(f"Visited Links: 0")
