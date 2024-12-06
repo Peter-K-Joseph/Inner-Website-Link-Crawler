@@ -128,7 +128,7 @@ class ScrapingThread(QThread):
 
         domain = urlparse(url).netloc
         if self.pattern and not any(re.search(p, domain) for p in self.pattern):
-            logging.info(f"Skipping {url} as it is not a VHA link")
+            logging.info(f"Skipping {url} as it is not a valid link")
             self.update_thread_status.emit(thread_id, f"Skipping {url}")  # Update thread status when skipping
             self.unvisited_links.discard(url)
             return
