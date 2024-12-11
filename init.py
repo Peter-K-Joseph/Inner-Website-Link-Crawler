@@ -23,10 +23,10 @@ Usage:
 logging.basicConfig(filename='./logs/crawler.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 no_workers = 20
 title = 'Site Crawler'
-valid_pattern = ['https://www.vha.ca']
-ignore_pattern = ['https://www.vha.ca/news/', 'https://www.vha.ca/tag/', 'https://www.vha.ca/blog/', 'https://www.vha.ca/\\d+/', 'https://www.vha.ca/recent-news', 'https://www.vha.ca/category', 'wpa-', '.xml', '/data:']
+valid_pattern = []
+ignore_pattern = []
 
-url = 'https://www.vha.ca/sitemap.xml'
+url = 'https://example.com/sitemap.xml'
 
 if __name__ == '__main__':
     app = QApplication([])
