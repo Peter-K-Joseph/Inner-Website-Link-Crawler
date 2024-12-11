@@ -55,7 +55,7 @@ class ScrapingThread(QThread):
     update_results = pyqtSignal(set, set)  # Signal to update results
     update_save_execution = pyqtSignal(pd.DataFrame)  # Signal to update save execution
 
-    def __init__(self, initial_sitemap_url, thread_status_labels, no_workers, pattern = []):
+    def __init__(self, initial_sitemap_url, thread_status_labels, no_workers, valid_patterns = [], ignore_patterns = []):
         super().__init__()
         self.no_workers = no_workers
         self.initial_sitemap_url = initial_sitemap_url
@@ -63,7 +63,8 @@ class ScrapingThread(QThread):
         self.unvisited_links = set()
         self.save_execution = pd.DataFrame(columns=['Links', 'Source'])
         self.lock = threading.Lock()
-        self.pattern = pattern
+        self.valid_patterns = valid_patterns
+        self.ignore_patterns = ignore_patterns
         self.thread_status_labels = thread_status_labels  # List of thread status labels
         self.HEADERS = {
             'User-Agent': (
@@ -98,10 +99,16 @@ class ScrapingThread(QThread):
         self.save_execution.to_csv(f"{location}/logs/execution.csv", index=False)
         self.update_status.emit("Execution saved to execution.csv")
         
+    def is_valid_pattern(self, link):
+        if not any(re.search(p, link) for p in self.valid_patterns) or any(re.search(p, link) for p in self.ignore_patterns):
+            return False
+        return True
+        
     def save_results(self):
         """Save the results to a file."""
         combined = self.visited_links.union(self.unvisited_links)
         combined = list(dict.fromkeys(combined))
+        combined = [link for link in combined if self.is_valid_pattern(link)]
         location = os.getcwd()
         with open(f"{location}/results/results.txt", 'w') as f:
             for link in combined:
@@ -166,7 +173,7 @@ class ScrapingThread(QThread):
             self.visited_links.add(url)
 
         domain = urlparse(url).netloc
-        if self.pattern and not any(re.search(p, domain) for p in self.pattern):
+        if not any(re.search(p, domain) for p in self.valid_patterns) or any(re.search(p, domain) for p in self.ignore_patterns):
             logging.info(f"Skipping {url} as it is not a valid link")
             self.update_thread_status.emit(thread_id, f"Skipping {url}")  # Update thread status when skipping
             self.unvisited_links.discard(url)

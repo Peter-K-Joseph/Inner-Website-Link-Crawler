@@ -21,13 +21,15 @@ Usage:
 """
 
 logging.basicConfig(filename='./logs/crawler.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-no_workers = 5
+no_workers = 20
 title = 'Site Crawler'
-valid_pattern = ['valid']
-url = 'https://www.example.com'
+valid_pattern = ['https://www.vha.ca']
+ignore_pattern = ['https://www.vha.ca/news/', 'https://www.vha.ca/tag/', 'https://www.vha.ca/blog/', 'https://www.vha.ca/\\d+/', 'https://www.vha.ca/recent-news', 'https://www.vha.ca/category', 'wpa-', '.xml', '/data:']
+
+url = 'https://www.vha.ca/sitemap.xml'
 
 if __name__ == '__main__':
     app = QApplication([])
-    window = WebCrawler(no_workers, url, title=title, pattern=valid_pattern)
+    window = WebCrawler(no_workers, url, title=title, valid_patterns=valid_pattern, ignore_patterns=ignore_pattern)
     window.show()
     app.exec_()

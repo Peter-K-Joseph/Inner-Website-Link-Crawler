@@ -50,7 +50,7 @@ class WebCrawler(QWidget):
         update_thread_status(thread_index, status):
             Updates the individual thread status on the UI.
     """
-    def __init__(self, no_workers, sitemap_url, title = 'Untitled Crawler', pattern = []):
+    def __init__(self, no_workers, sitemap_url, title = 'Untitled Crawler', valid_patterns = [], ignore_patterns = []):
         super().__init__()
 
         self.visited_links = set()
@@ -59,7 +59,8 @@ class WebCrawler(QWidget):
         self.title = title
         self.action_started = False
         self.save_execution = pd.DataFrame(columns=['Links', 'Source'])
-        self.pattern = pattern
+        self.valid_patterns = valid_patterns
+        self.ignore_patterns = ignore_patterns
         if sitemap_url:
             self.initial_sitemap_url = sitemap_url
         else:
@@ -155,7 +156,7 @@ class WebCrawler(QWidget):
         logging.info("Starting sitemap parsing")
 
         # Start the scraping process in the worker thread
-        self.scraping_thread = ScrapingThread(self.initial_sitemap_url, self.thread_status, self.no_workers, self.pattern)
+        self.scraping_thread = ScrapingThread(self.initial_sitemap_url, self.thread_status, self.no_workers, self.valid_patterns, self.ignore_patterns)
         self.scraping_thread.update_status.connect(self.update_status)
         self.scraping_thread.update_progress.connect(self.update_progress)
         self.scraping_thread.update_thread_status.connect(self.update_thread_status)
