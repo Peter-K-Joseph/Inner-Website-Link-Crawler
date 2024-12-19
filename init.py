@@ -1,6 +1,7 @@
 import logging
 from modules.crawler import WebCrawler
 from PyQt5.QtWidgets import QApplication
+import os
 
 """
 This script initializes and runs a web crawler application using PyQt5 for the GUI.
@@ -28,7 +29,17 @@ ignore_pattern = []
 
 url = 'https://example.com/sitemap.xml'
 
+def setup():
+    """
+    Setup function to initialize the web crawler application.
+    """
+    if not os.path.exists('./logs'):
+        os.makedirs('./logs')
+    if not os.path.exists('./results'):
+        os.makedirs('./results')
+
 if __name__ == '__main__':
+    setup()
     app = QApplication([])
     window = WebCrawler(no_workers, url, title=title, valid_patterns=valid_pattern, ignore_patterns=ignore_pattern)
     window.show()
